@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const multipartMiddleware = multipart();
 
 // API Configurations for KAIROS
-let kairo_client = new Kairos('7422b369', '914f6e0bb6fac47f3fdf5c42a90735db');
+let kairos_client = new Kairos('7422b369', '914f6e0bb6fac47f3fdf5c42a90735db');
 
 // Add the route for uploading images to Kairos gallery
 app.post('/upload', multipartMiddleware, function(req, res) {
@@ -22,11 +22,12 @@ app.post('/upload', multipartMiddleware, function(req, res) {
     var params = {
         image: base64image,
         subject_id: req.body.name,
-        gallery_name: 'recognize',
+        gallery_name: 'recognition',
     };
     console.log('sending to Kairos for training');
     kairos_client.enroll(params).then(function(result) {
     // return status of upload
+        console.log('Image Attributes : \n' + JSON.stringify(result.body));
         return res.json({'status' : true });
     }).catch(function(err) { 
         // return status if upload
@@ -40,14 +41,18 @@ app.post('/verify', multipartMiddleware, function(req, res) {
     let base64image = fs.readFileSync(req.files.image.path, 'base64');
     var params = {
         image: base64image,
-        gallery_name: 'recognize',
+        gallery_name: 'recognition',
     };
     console.log('sending to Kairos for recognition');
     kairos_client.recognize(params).then(function(result) {
     // return the response
+        console.log('Server responded with : \n' + JSON.stringify(result.body));
         return res.json(result.body);
     }).catch(function(err) { 
     // return status code as false
         return res.json({'status' : false});
     });  
 });
+
+app.listen(3128);
+console.log('Listening on localhost:3128');
