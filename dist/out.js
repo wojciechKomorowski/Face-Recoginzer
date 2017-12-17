@@ -9609,16 +9609,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var RecognizerHead = function (_React$Component) {
-        _inherits(RecognizerHead, _React$Component);
+    var RecognizerHeader = function (_React$Component) {
+        _inherits(RecognizerHeader, _React$Component);
 
-        function RecognizerHead() {
-            _classCallCheck(this, RecognizerHead);
+        function RecognizerHeader() {
+            _classCallCheck(this, RecognizerHeader);
 
-            return _possibleConstructorReturn(this, (RecognizerHead.__proto__ || Object.getPrototypeOf(RecognizerHead)).apply(this, arguments));
+            return _possibleConstructorReturn(this, (RecognizerHeader.__proto__ || Object.getPrototypeOf(RecognizerHeader)).apply(this, arguments));
         }
 
-        _createClass(RecognizerHead, [{
+        _createClass(RecognizerHeader, [{
             key: 'render',
             value: function render() {
                 return _react2.default.createElement(
@@ -9633,19 +9633,50 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }]);
 
-        return RecognizerHead;
+        return RecognizerHeader;
     }(_react2.default.Component);
 
-    var RecognizerUpload = function (_React$Component2) {
-        _inherits(RecognizerUpload, _React$Component2);
+    var RecognizerUploader = function (_React$Component2) {
+        _inherits(RecognizerUploader, _React$Component2);
 
-        function RecognizerUpload(props) {
-            _classCallCheck(this, RecognizerUpload);
+        function RecognizerUploader(props) {
+            _classCallCheck(this, RecognizerUploader);
 
-            var _this2 = _possibleConstructorReturn(this, (RecognizerUpload.__proto__ || Object.getPrototypeOf(RecognizerUpload)).call(this, props));
+            var _this2 = _possibleConstructorReturn(this, (RecognizerUploader.__proto__ || Object.getPrototypeOf(RecognizerUploader)).call(this, props));
+
+            _this2.changeName = function (e) {
+                _this2.setState({
+                    name: e.target.value
+                });
+            };
 
             _this2.handleSubmit = function (e) {
                 e.preventDefault();
+                // Assemble form data
+                var formData = new FormData();
+                formData.append('image', _this2.state.file);
+                formData.append('name', _this2.state.name);
+                _this2.setState({
+                    uploadStatus: 'Uploading image...Please be patient.'
+                });
+                console.log('Upload form was submitted');
+                // Post to server
+                fetch("http://localhost:3128/upload", {
+                    mode: 'cors',
+                    method: "POST",
+                    body: formData
+                }).then(function (res) {
+                    // Post a status message
+                    if (res.ok) {
+                        _this2.setState({
+                            uploadStatus: 'Image has been uploaded successfully.'
+                        });
+                    } else {
+                        _this2.setState({
+                            uploadStatus: 'There was an issue with the upload, try again.'
+                        });
+                    }
+                });
             };
 
             _this2.handleImageChange = function (e) {
@@ -9660,19 +9691,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         imagePreviewUrl: reader.result
                     });
                 };
-
                 reader.readAsDataURL(file);
-                console.log(file);
             };
 
             _this2.state = {
                 file: '',
-                imagePreviewUrl: ''
+                imagePreviewUrl: '',
+                name: '',
+                uploadStatus: ''
             };
             return _this2;
         }
 
-        _createClass(RecognizerUpload, [{
+        _createClass(RecognizerUploader, [{
             key: 'render',
             value: function render() {
                 var imagePreviewUrl = this.state.imagePreviewUrl;
@@ -9685,53 +9716,172 @@ document.addEventListener('DOMContentLoaded', function () {
                         'Upload Section'
                     ),
                     _react2.default.createElement(
-                        'div',
-                        null,
+                        'form',
+                        { action: '', encType: 'multipart/form-data', onSubmit: this.handleSubmit },
                         _react2.default.createElement(
-                            'label',
-                            { name: 'nameUpload' },
-                            'Name: '
-                        ),
-                        _react2.default.createElement('input', { type: 'text', name: 'nameUpload', id: 'nameUpload' })
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        _react2.default.createElement(
-                            'label',
-                            { name: 'fileUpload' },
-                            'File: '
-                        ),
-                        _react2.default.createElement('input', { type: 'file', onChange: this.handleImageChange, name: 'fileUpload', id: 'fileUpload' })
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        null,
-                        _react2.default.createElement(
-                            'button',
+                            'div',
                             null,
-                            'Upload'
+                            _react2.default.createElement(
+                                'label',
+                                { name: 'nameUpload' },
+                                'Name: '
+                            ),
+                            _react2.default.createElement('input', { type: 'text', required: true, onChange: this.changeName, name: 'nameUpload', id: 'nameUpload' })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'label',
+                                { name: 'fileUpload' },
+                                'File: '
+                            ),
+                            _react2.default.createElement('input', { type: 'file', required: true, onChange: this.handleImageChange, name: 'fileUpload', className: 'file-upload' })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement('input', { type: 'submit', value: 'Upload' })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'preview' },
+                            _react2.default.createElement(
+                                'h3',
+                                null,
+                                'Image previev'
+                            ),
+                            _react2.default.createElement('img', { src: imagePreviewUrl, alt: 'image to upload', className: 'preview__image' }),
+                            _react2.default.createElement(
+                                'p',
+                                null,
+                                this.state.uploadStatus
+                            )
                         )
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'preview' },
-                        _react2.default.createElement(
-                            'h3',
-                            null,
-                            'Image previev'
-                        ),
-                        _react2.default.createElement('img', { src: imagePreviewUrl, alt: 'imageToUpload', className: 'preview__image' })
                     )
                 );
             }
         }]);
 
-        return RecognizerUpload;
+        return RecognizerUploader;
     }(_react2.default.Component);
 
-    var App = function (_React$Component3) {
-        _inherits(App, _React$Component3);
+    var RecognizerIdentifier = function (_React$Component3) {
+        _inherits(RecognizerIdentifier, _React$Component3);
+
+        function RecognizerIdentifier(props) {
+            _classCallCheck(this, RecognizerIdentifier);
+
+            var _this3 = _possibleConstructorReturn(this, (RecognizerIdentifier.__proto__ || Object.getPrototypeOf(RecognizerIdentifier)).call(this, props));
+
+            _this3.handleSubmit = function (e) {
+                e.preventDefault();
+                // Assemble form data
+                var formData = new FormData();
+                formData.append('image', _this3.state.file);
+                _this3.setState({
+                    identifyStatus: 'Attempting to recognize you...please wait.'
+                });
+                console.log('Identify form was submitted');
+                // Post to server
+                fetch("http://localhost:3128/verify", {
+                    mode: 'cors',
+                    method: "POST",
+                    body: formData
+                }).then(function (res) {
+                    console.log(res.json);
+                    // Post a status message
+                    if (res.ok) {
+                        _this3.setState({
+                            uploadStatus: 'What\'s good ' + '!'
+                        });
+                    } else {
+                        _this3.setState({
+                            uploadStatus: 'Don\'t know who you are! Try uploading a picture first in upload section.'
+                        });
+                    }
+                });
+            };
+
+            _this3.handleImageChange = function (e) {
+                e.preventDefault();
+
+                var reader = new FileReader();
+                var file = e.target.files[0];
+
+                reader.onloadend = function () {
+                    _this3.setState({
+                        file: file,
+                        imagePreviewUrl: reader.result
+                    });
+                };
+                reader.readAsDataURL(file);
+            };
+
+            _this3.state = {
+                file: '',
+                imagePreviewUrl: '',
+                name: '',
+                identifyStatus: ''
+            };
+            return _this3;
+        }
+
+        _createClass(RecognizerIdentifier, [{
+            key: 'render',
+            value: function render() {
+                var imagePreviewUrl = this.state.imagePreviewUrl;
+                return _react2.default.createElement(
+                    'div',
+                    { className: 'identify' },
+                    _react2.default.createElement(
+                        'h2',
+                        null,
+                        'Identify Section'
+                    ),
+                    _react2.default.createElement(
+                        'form',
+                        { action: '', encType: 'multipart/form-data', onSubmit: this.handleSubmit },
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'label',
+                                { name: 'fileIdentify' },
+                                'Upload Picture of Person to Recognise: '
+                            ),
+                            _react2.default.createElement('input', { type: 'file', required: true, onChange: this.handleImageChange, name: 'fileIdentify', className: 'file-identify' })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement('input', { type: 'submit', value: 'Identify' })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'preview' },
+                            _react2.default.createElement(
+                                'h3',
+                                null,
+                                'Image previev'
+                            ),
+                            _react2.default.createElement('img', { src: imagePreviewUrl, alt: 'image to identify', className: 'preview__image' }),
+                            _react2.default.createElement(
+                                'p',
+                                null,
+                                this.state.identifyStatus
+                            )
+                        )
+                    )
+                );
+            }
+        }]);
+
+        return RecognizerIdentifier;
+    }(_react2.default.Component);
+
+    var App = function (_React$Component4) {
+        _inherits(App, _React$Component4);
 
         function App() {
             _classCallCheck(this, App);
@@ -9745,8 +9895,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 return _react2.default.createElement(
                     'div',
                     null,
-                    _react2.default.createElement(RecognizerHead, null),
-                    _react2.default.createElement(RecognizerUpload, null)
+                    _react2.default.createElement(RecognizerHeader, null),
+                    _react2.default.createElement(RecognizerUploader, null),
+                    _react2.default.createElement(RecognizerIdentifier, null)
                 );
             }
         }]);
