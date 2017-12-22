@@ -1,17 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Form, FormControl, Button } from 'react-bootstrap';
 
 document.addEventListener('DOMContentLoaded', function(){
-
-    class RecognizerHeader extends React.Component {
-        render() {
-            return (
-                <div>
-                    <h1>Welcome in Face-Recognition App :)</h1>
-                </div>
-            )
-        }
-    }
 
     class RecognizerUploader extends React.Component {
         constructor(props) {
@@ -20,14 +11,16 @@ document.addEventListener('DOMContentLoaded', function(){
                 file: '',
                 imagePreviewUrl: '',
                 name: '',
-                uploadStatus: '' 
+                uploadStatus: '',
+                uploadDisplay: this.props.uploadDisplay,
+                identifyDisplay: this.props.identifyDisplay 
             };
         }
 
         changeName = (e) => {
             this.setState ({
                 name: e.target.value 
-            })
+            });
         }
 
         handleSubmit = (e) => {
@@ -38,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function(){
             formData.append('name', this.state.name);
             this.setState ({
                 uploadStatus: 'Uploading image...Please be patient.'
-            })
+            });
             console.log('Upload form was submitted');
             // Post to server
             fetch("http://localhost:3128/upload", {
@@ -48,15 +41,25 @@ document.addEventListener('DOMContentLoaded', function(){
                 }).then((res) => {
                     // Post a status message
                     if (res.ok) {
-                        this.setState ({
-                            uploadStatus: 'Image has been uploaded successfully.' 
+                        res.json()
+                        .then(data => {
+                            // Post a status message
+                            if (Object.keys(data)[0] === 'Errors') {
+                                this.setState ({
+                                    uploadStatus: 'Sorry, ' + data.Errors[0].Message + '. Please upload another image. :)' 
+                                });
+                            } else {
+                                this.setState ({
+                                    uploadStatus: 'Image has been uploaded successfully. :)' 
+                                });
+                            }
                         })
                     } else {
                         this.setState ({
-                            uploadStatus: 'There was an issue with the upload, try again.' 
-                        })
+                            uploadStatus: 'There was an issue with the upload. Please try again.' 
+                        });
                     }
-                });
+            });
         }
 
         handleImageChange = (e) => {
@@ -76,27 +79,32 @@ document.addEventListener('DOMContentLoaded', function(){
 
         render() {
             let imagePreviewUrl = this.state.imagePreviewUrl;
+            let imagePreview = null;
+            if (imagePreviewUrl) {
+                imagePreview = <img src={imagePreviewUrl} alt="image to identify" className="preview__image"/>
+            } else {
+                imagePreview = <p>Please select an Image for Preview.</p>
+            }
             return (
                 <div className="upload">
-                    <h2>Upload Section</h2>
                     <form action="" encType="multipart/form-data" onSubmit={this.handleSubmit}>
                         <div>
                             <label name="nameUpload">Name: </label>
-                            <input type="text" required onChange={this.changeName} name="nameUpload" id="nameUpload"/>
+                            <FormControl type="text" required onChange={this.changeName} label="nameUpload" placeholder="Name (e.g. John)" id="nameUpload"/>
                         </div>
                         <div>
                             <label name="fileUpload">File: </label>
-                            <input type="file" required onChange={this.handleImageChange} name="fileUpload" className="file-upload"/>
+                            <input type="file" required onChange={this.handleImageChange} label="fileUpload" className="file-upload"/>
                         </div>
                         <div>
-                            <input type="submit" value="Upload" />
+                            <FormControl type="submit" value="Upload" className="upload__button" />
                         </div>  
-                        <div className="preview">
-                            <h3>Image previev</h3>
-                            <img src={imagePreviewUrl} alt="image to upload" className="preview__image"/>
-                            <p>{this.state.uploadStatus}</p>
-                        </div>
                     </form>
+                    <div className="preview">
+                            <h3>Image preview</h3>
+                            {imagePreview}
+                            <p>{this.state.uploadStatus}</p>
+                    </div>
                 </div>
             )
         }
@@ -109,7 +117,9 @@ document.addEventListener('DOMContentLoaded', function(){
                 file: '',
                 imagePreviewUrl: '',
                 name: '',
-                identifyStatus: '' 
+                identifyStatus: '',
+                uploadDisplay: this.props.uploadDisplay,
+                identifyDisplay: this.props.identifyDisplay 
             };
         }
 
@@ -120,26 +130,40 @@ document.addEventListener('DOMContentLoaded', function(){
             formData.append('image', this.state.file);
             this.setState ({
                 identifyStatus: 'Attempting to recognize you...please wait.'
-            })
+            });
             console.log('Identify form was submitted');
-            // Post to server
+            // Post to server.
             fetch("http://localhost:3128/verify", {
                 mode: 'cors',
                 method: "POST",
                 body: formData
                 }).then((res) => {
-                    console.log(res.json);
-                    // Post a status message
                     if (res.ok) {
-                        this.setState ({
-                            uploadStatus: 'What\'s good ' + '!' 
+                        res.json()
+                        .then(data => {
+                            // Post a status message
+                            if (Object.keys(data)[0] === 'Errors') {
+                                this.setState ({
+                                    identifyStatus: 'Sorry, ' + data.Errors[0].Message + '.' 
+                                });
+                            } else {
+                                if (data.images[0].transaction.status === 'success') {
+                                    this.setState ({
+                                        identifyStatus: 'Hello ' + data.images[0].transaction.subject_id + '! :)' 
+                                    });
+                                } else {
+                                    this.setState ({
+                                        identifyStatus: data.images[0].transaction.message + '. Try uploading a picture first in upload section! :)' 
+                                    });
+                                }
+                            }
                         })
                     } else {
                         this.setState ({
-                            uploadStatus: 'Don\'t know who you are! Try uploading a picture first in upload section.' 
-                        })
-                    }  
-                });
+                            uploadStatus: 'There was an issue with the upload. Please try again.' 
+                        });
+                    }
+                });     
         }
 
         handleImageChange = (e) => {
@@ -159,24 +183,82 @@ document.addEventListener('DOMContentLoaded', function(){
 
         render() {
             let imagePreviewUrl = this.state.imagePreviewUrl;
+            let imagePreview = null;
+            if (imagePreviewUrl) {
+                imagePreview = <img src={imagePreviewUrl} alt="image to identify" className="preview__image"/>
+            } else {
+                imagePreview = <p>Please select an Image for Preview.</p>
+            }
             return (
                 <div className="identify">
-                    <h2>Identify Section</h2>
                     <form action="" encType="multipart/form-data" onSubmit={this.handleSubmit}>
                         <div>
                             <label name="fileIdentify">Upload Picture of Person to Recognise: </label>
                             <input type="file" required onChange={this.handleImageChange} name="fileIdentify" className="file-identify"/>
                         </div>
                         <div>
-                            <input type="submit" value="Identify" />
+                            <FormControl type="submit" value="Identify" className="identify__button" />
                         </div>  
-                        <div className="preview">
-                            <h3>Image previev</h3>
-                            <img src={imagePreviewUrl} alt="image to identify" className="preview__image"/>
-                            <p>{this.state.identifyStatus}</p>
-                        </div>
                     </form>
+                    <div className="preview">
+                            <h3>Image preview</h3>
+                            {imagePreview}
+                            <p>{this.state.identifyStatus}</p>
+                    </div>
                 </div>
+            )
+        }
+    }
+
+    class Recognizer extends React.Component {
+        constructor(props) {
+            super(props)
+            this.state = {
+                uploadDisplay: this.props.uploadDisplay,
+                identifyDisplay: this.props.identifyDisplay
+            };
+        }
+
+        changeUploadDisplay = () => {
+            if (this.state.uploadDisplay === 'none' && this.state.identifyDisplay === 'block') {
+                this.setState ({
+                    uploadDisplay: 'block',
+                    identifyDisplay : 'none'
+                });
+            }
+        }
+
+        changeIdentifyDisplay = () => {
+            if (this.state.uploadDisplay === 'block' && this.state.identifyDisplay === 'none') {
+                this.setState ({
+                    uploadDisplay: 'none',
+                    identifyDisplay : 'block'
+                });
+            }
+        }
+
+        render() {
+            return (
+                <div>
+                    <div className="header">
+                    <h1>Welcome in Face-Recognizer App 🙈 🙉</h1>
+                    <h3>Upload an image of yourself and give <a href="https://www.kairos.com/" target="blank">Kairos AI</a> a shot to recognize you.</h3>
+                    </div>
+                    <div className="header__sections">
+                        <Button onClick={this.changeUploadDisplay} className="sections__button">Upload</Button>
+                        <Button onClick={this.changeIdentifyDisplay} className="sections__button">Identify</Button>
+                    </div>
+                    <div style={{display: this.state.uploadDisplay}}>
+                        <RecognizerUploader />
+                    </div> 
+                    <div style={{display: this.state.identifyDisplay}}>
+                        <RecognizerIdentifier />
+                    </div>
+                    <div className="footer">
+                        <p>Face-Recognizer&copy;</p>                    
+                        <a href="https://github.com/wojciechKomorowski" target="blank">wojciechKomorowski</a>
+                    </div>   
+                </div> 
             )
         }
     }
@@ -184,11 +266,7 @@ document.addEventListener('DOMContentLoaded', function(){
     class App extends React.Component {
         render() {
             return (
-                <div>
-                    <RecognizerHeader />
-                    <RecognizerUploader />
-                    <RecognizerIdentifier />
-                </div>
+                <Recognizer uploadDisplay="block" identifyDisplay="none" />
             )
         }
     }
