@@ -28,7 +28,7 @@ app.post('/upload', multipartMiddleware, function(req, res) {
     kairos_client.enroll(params).then(function(result) {
     // return status of upload
         console.log('Image Attributes : \n' + JSON.stringify(result.body));
-        return res.json({'status' : true });
+        return res.json(result.body);
     }).catch(function(err) { 
         // return status if upload
         return res.json({'status' : false});
