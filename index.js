@@ -8,8 +8,8 @@ const multipart = require('connect-multiparty');
 const app = express();
 
 // Port number
+const PORT = process.env.PORT || 3128;
 
-const port = process.env.PORT || 3128;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -18,6 +18,9 @@ const multipartMiddleware = multipart();
 
 // API Configurations for KAIROS
 let kairos_client = new Kairos('7422b369', '914f6e0bb6fac47f3fdf5c42a90735db');
+
+// Priority serve any static files
+app.use(express.static('public'));
 
 // Add the route for uploading images to Kairos gallery
 app.post('/upload', multipartMiddleware, function(req, res) {
@@ -58,5 +61,5 @@ app.post('/verify', multipartMiddleware, function(req, res) {
     });  
 });
 
-app.listen(port);
-console.log('Listening on localhost:3128');
+app.listen(PORT);
+console.log('Listening on ' + PORT);
