@@ -17679,7 +17679,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 console.log('Upload form was submitted');
                 // Post to server
-                fetch("users/upload", {
+                fetch("https://face-recognizer-app.herokuapp.com//upload", {
                     mode: 'cors',
                     method: "POST",
                     body: formData
@@ -17818,7 +17818,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 console.log('Identify form was submitted');
                 // Post to server.
-                fetch("users/verify", {
+                fetch("https://face-recognizer-app.herokuapp.com//verify", {
                     mode: 'cors',
                     method: "POST",
                     body: formData
