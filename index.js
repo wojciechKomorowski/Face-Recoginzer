@@ -6,6 +6,10 @@ const bodyParser = require('body-parser');
 const multipart = require('connect-multiparty');
 
 const app = express();
+
+// Port number
+
+const port = process.env.PORT || 3128;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -54,5 +58,5 @@ app.post('/verify', multipartMiddleware, function(req, res) {
     });  
 });
 
-app.listen(3128);
+app.listen(port);
 console.log('Listening on localhost:3128');
