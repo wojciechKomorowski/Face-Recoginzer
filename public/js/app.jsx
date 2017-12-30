@@ -54,12 +54,12 @@ document.addEventListener('DOMContentLoaded', function(){
                                 });
                             }
                         })
-                    } else {
-                        this.setState ({
-                            uploadStatus: 'There was an issue with the upload. Please try again.' 
-                        });
-                    }
-            });
+                    } 
+            }).catch((error) => {
+                this.setState ({
+                    uploadStatus: 'There was an issue with the verify. Please try again.' 
+                });
+            });  
         }
 
         handleImageChange = (e) => {
@@ -158,11 +158,11 @@ document.addEventListener('DOMContentLoaded', function(){
                                 }
                             }
                         })
-                    } else {
-                        this.setState ({
-                            uploadStatus: 'There was an issue with the upload. Please try again.' 
-                        });
                     }
+                }).catch((error) => {
+                    this.setState ({
+                        uploadStatus: 'There was an issue with the verify. Please try again.' 
+                    });
                 });     
         }
 
