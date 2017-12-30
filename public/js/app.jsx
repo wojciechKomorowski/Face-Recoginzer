@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function(){
             });
             console.log('Upload form was submitted');
             // Post to server
-            fetch("http://localhost:3128/upload", {
+            fetch("/upload", {
                 mode: 'cors',
                 method: "POST",
                 body: formData
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function(){
             });
             console.log('Identify form was submitted');
             // Post to server.
-            fetch("http://localhost:3128/verify", {
+            fetch("/verify", {
                 mode: 'cors',
                 method: "POST",
                 body: formData
