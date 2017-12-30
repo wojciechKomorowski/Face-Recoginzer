@@ -17788,7 +17788,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ),
                         imagePreview,
                         _react2.default.createElement(
-                            'p',
+                            'h4',
                             null,
                             this.state.uploadStatus
                         )
@@ -17833,7 +17833,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             } else {
                                 if (data.images[0].transaction.status === 'success') {
                                     _this2.setState({
-                                        identifyStatus: 'Hello ' + data.images[0].transaction.subject_id + '! :)'
+                                        identifyStatus: 'Hello ' + data.images[0].transaction.subject_id + '! 😎'
                                     });
                                 } else {
                                     _this2.setState({
@@ -17922,7 +17922,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ),
                         imagePreview,
                         _react2.default.createElement(
-                            'p',
+                            'h4',
                             null,
                             this.state.identifyStatus
                         )
