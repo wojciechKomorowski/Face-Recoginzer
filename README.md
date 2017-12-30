@@ -1,4 +1,5 @@
 # Face-Recognizer
+
 Simple face recognition app. Created using Kairos API, Node.js, ReactJS and React-Bootstrap.
 
 ## Getting Started
@@ -21,22 +22,16 @@ For easy monitoring and restarting the server install [nodemon](https://nodemon.
 npm install -g nodemon
 ```
 
-For easy hosting your project install [live-server](https://https://www.npmjs.com/package/live-server) globally.
-
-```
-npm install -g live-server
-```
-
 After cloning repository just type in console:
 
 ```
 npm install
 ```
 
-All packages from package.json devDependencies should be installed in node_modules.
+All packages from package.json dependencies should be installed in node_modules.
 
 ```
-"devDependencies": {
+"dependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
@@ -55,6 +50,7 @@ All packages from package.json devDependencies should be installed in node_modul
   },
 
 ```
+
 To use modules you need to run webpack through console in your project location:
 
 ```
@@ -67,18 +63,12 @@ If you installed webpack globally, you can type:
 webpack
 ```
 
-Open new tab in console to run live-server:
-
-```
-live-server
-```
-Now your project is hosted on localhost:8080.
-
 Open new tab in console to run node server:
 
 ```
 nodemon
 ```
+
 Now your server is hosted on localhost:3128.
 
 ## Built With
