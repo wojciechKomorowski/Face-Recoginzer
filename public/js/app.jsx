@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     <div className="preview">
                             <h3>Image preview</h3>
                             {imagePreview}
-                            <p>{this.state.uploadStatus}</p>
+                            <h4>{this.state.uploadStatus}</h4>
                     </div>
                 </div>
             )
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function(){
                             } else {
                                 if (data.images[0].transaction.status === 'success') {
                                     this.setState ({
-                                        identifyStatus: 'Hello ' + data.images[0].transaction.subject_id + '! :)' 
+                                        identifyStatus: 'Hello ' + data.images[0].transaction.subject_id + '! 😎' 
                                     });
                                 } else {
                                     this.setState ({
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     <div className="preview">
                             <h3>Image preview</h3>
                             {imagePreview}
-                            <p>{this.state.identifyStatus}</p>
+                            <h4>{this.state.identifyStatus}</h4>
                     </div>
                 </div>
             )
