@@ -17698,11 +17698,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                             }
                         });
-                    } else {
-                        _this.setState({
-                            uploadStatus: 'There was an issue with the upload. Please try again.'
-                        });
                     }
+                }).catch(function (error) {
+                    _this.setState({
+                        uploadStatus: 'There was an issue with the verify. Please try again.'
+                    });
                 });
             };
 
@@ -17842,11 +17842,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             }
                         });
-                    } else {
-                        _this2.setState({
-                            uploadStatus: 'There was an issue with the upload. Please try again.'
-                        });
                     }
+                }).catch(function (error) {
+                    _this2.setState({
+                        uploadStatus: 'There was an issue with the verify. Please try again.'
+                    });
                 });
             };
 
