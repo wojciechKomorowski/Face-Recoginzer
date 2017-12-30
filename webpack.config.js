@@ -1,7 +1,7 @@
 const path = require("path");
 module.exports = {
-    entry: "./js/app.jsx",
-    output: { path: path.resolve("dist"), filename: "./out.js" },
+    entry: "./public/js/app.jsx",
+    output: { path: path.resolve(__dirname, "./public/dist"), filename: "./out.js" },
     watch: true,
     module: {
         loaders: [ {
