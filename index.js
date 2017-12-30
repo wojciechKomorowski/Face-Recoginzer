@@ -1,6 +1,7 @@
 const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
+const path = require('path');
 const Kairos = require('kairos-api');
 const bodyParser = require('body-parser');
 const multipart = require('connect-multiparty');
@@ -20,7 +21,7 @@ const multipartMiddleware = multipart();
 let kairos_client = new Kairos('7422b369', '914f6e0bb6fac47f3fdf5c42a90735db');
 
 // Priority serve any static files
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Add the route for uploading images to Kairos gallery
 app.post('/upload', multipartMiddleware, function(req, res) {
