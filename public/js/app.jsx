@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function(){
                             }
                         })
                     } 
+                    throw Error(res.statusText);
             }).catch((error) => {
                 this.setState ({
                     uploadStatus: 'There was an issue with the verify. Please try again.' 
@@ -159,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function(){
                             }
                         })
                     }
+                    throw Error(res.statusText);
                 }).catch((error) => {
                     this.setState ({
                         uploadStatus: 'There was an issue with the verify. Please try again.' 
